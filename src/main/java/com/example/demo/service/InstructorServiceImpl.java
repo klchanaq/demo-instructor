@@ -80,5 +80,4 @@ public class InstructorServiceImpl implements InstructorService {
         instructorRepository.deleteById(id);
     }
 
-
 }

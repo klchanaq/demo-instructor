@@ -7,8 +7,23 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
+
+/*
+*    Notes:
+*    #1: When you put @Id & @GeneratedValue on field "Long id" instead of getter method "getId()",
+*        Hibernate will use AccessType.Field to create SQL ( which means no setters/getters except Id's setter/getter are being used )
+*        However, you can use @Access(value = AccessType.PROPERTY) on each field to let Hibernate uses setters/getters
+*        @Access(value = AccessType.PROPERTY) => use setters/getters
+*        @Access(value = AccessType.FIELD) => use fields
+*    #2: You can remove all @Column(name = "xx") on fields/getters if no name alignment between table & entity is considered
+*    #3: You can remove @Embedded on the entities which use embeddable domains, but you must keep either @Embedded or @Embeddable on one side.
+*        For example, in "Instructor" entity, you can remove @Embedded on Address, but you must explicitly set @Embeddable on "Address" entity.
+*    #4: You can remove @AttributeOverrides on @embedded fields/getters if no name alignment between table & entity is considered
+*    #5: @DynamicInsert & @DynamicUpdate are optional, use them when the there are many columns
+*    #6: You can use @Immutable on class type and remove all setter methods, which make the Entity/Table becomes read-only
+*        @Immutable is good for "view" on Database ( for view, say, you need to join 5 tables together and only select partial fields )
+* */
 
 @Entity
 @Table(name = "instructor")
@@ -45,45 +60,45 @@ public class Instructor implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public Long getId() {
-        System.out.println("Instructor.getId");
+        System.out.print("Instructor.getId");
         return id;
     }
 
     public void setId(Long id) {
-        System.out.println("Instructor.setId " + id);
+        System.out.print("Instructor.setId " + id);
         this.id = id;
     }
 
     @Column(name = "first_name")
     public String getFirstName() {
-        System.out.println("Instructor.getFirstName");
+        System.out.print(" & Instructor.getFirstName");
         return firstName;
     }
 
     public void setFirstName(String firstName) {
-        System.out.println("Instructor.setFirstName " + firstName);
+        System.out.print(" & Instructor.setFirstName " + firstName);
         this.firstName = firstName;
     }
 
     @Column(name = "last_name")
     public String getLastName() {
-        System.out.println("Instructor.getLastName");
+        System.out.print(" & Instructor.getLastName");
         return lastName;
     }
 
     public void setLastName(String lastName) {
-        System.out.println("Instructor.setLastName " + lastName);
+        System.out.print(" & Instructor.setLastName " + lastName);
         this.lastName = lastName;
     }
 
     @Column(name = "email")
     public String getEmail() {
-        System.out.println("Instructor.getEmail");
+        System.out.print(" & Instructor.getEmail");
         return email;
     }
 
     public void setEmail(String email) {
-        System.out.println("Instructor.setEmail " + email);
+        System.out.print(" & Instructor.setEmail " + email);
         this.email = email;
     }
 
@@ -94,12 +109,12 @@ public class Instructor implements Serializable {
             @AttributeOverride(name = "zipCode", column = @Column(name = "address_zipCode"))
     })
     public Address getAddress() {
-        System.out.println("Instructor.getAddress");
+        System.out.print(" & Instructor.getAddress");
         return address;
     }
 
     public void setAddress(Address address) {
-        System.out.println("Instructor.setAddress " + address);
+        System.out.print(" & Instructor.setAddress " + address);
         this.address = address;
     }
 
