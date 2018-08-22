@@ -1,7 +1,9 @@
 package com.example.demo.config;
 
 import com.example.demo.domain.Instructor;
+import com.example.demo.domain.Review;
 import com.example.demo.domain.embeddableDomain.Address;
+import com.example.demo.repository.ReviewRepository;
 import com.example.demo.service.InstructorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import java.util.Date;
 
 @Configuration
 @EnableJpaRepositories(basePackages = {"com.example.demo.repository"})
@@ -27,7 +31,7 @@ public class DatabaseConfiguration {
     }
 
     @Bean
-    public CommandLineRunner commandLineRunner(InstructorService instructorService) {
+    public CommandLineRunner commandLineRunner(InstructorService instructorService, ReviewRepository reviewRepository) {
         // after inject repository / service beans
         return args -> {
 
@@ -38,6 +42,9 @@ public class DatabaseConfiguration {
             instructor.setEmail("johnwhite@gmail.com");
             instructor.setAddress(new Address("UK", "London Street 1", null));
             instructorService.save(instructor);
+
+            Review review = new Review("Good Course!", new Date(2010 - 1900, 11, 3));
+            reviewRepository.save(review);
 
         };
     }
